@@ -1,0 +1,96 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.TicTacToe.iml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+
+# Папки сборки и временные файлы
+bin/
+obj/
+out/
+
+# Файлы пользовательских настроек
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Файлы Visual Studio
+.vs/
+.vscode/
+*.vssettings
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Директории NuGet
+packages/
+
+# Файлы среды и конфигурации
+.env
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+
+# ОС-специфичные файлы
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msp
+*.msm
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Другие
+*.cache
+*.bak
+*.orig
+*.swp
+*~
+\#*\#
+
+# Docker
+.dockerignore
+
+# IDE
+.idea/
+*.csproj.user
+launchSettings.json
+
+# Публикация и развертывание
+publish/
+artifacts/
+
+# Специфичные для .NET файлы
+*.aps
+*.bak
+*.cache
+*.gpState
+*.DotSettings
+*.pidb
+*.userprefs
