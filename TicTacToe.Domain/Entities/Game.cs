@@ -189,7 +189,7 @@ public class Game
         char currentTurn,
         DateTime createdAt,
         DateTime updatedAt,
-        ICollection<Move> moves)
+        IReadOnlyCollection<Move> moves)
     {
         var game = new Game
         {
