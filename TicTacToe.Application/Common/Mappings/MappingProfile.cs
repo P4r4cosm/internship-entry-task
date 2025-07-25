@@ -10,16 +10,23 @@ public class MappingProfile : Profile
     {
         CreateMap<Move, MoveDto>();
         CreateMap<Game, GameDto>()
-            // Настраиваем кастомный маппинг для поля Board
             .ForMember(dest => dest.Board, opt => opt.MapFrom(src => MapBoard(src)));
     }
 
-    private char?[,] MapBoard(Game game)
+    // Логика маппинга теперь возвращает char?[][]
+    private char?[][] MapBoard(Game game)
     {
-        var board = new char?[game.BoardSize, game.BoardSize];
+        // Создаем рваный массив
+        var board = new char?[game.BoardSize][];
+        for (int i = 0; i < game.BoardSize; i++)
+        {
+            board[i] = new char?[game.BoardSize];
+        }
+
+        // Заполняем его
         foreach (var move in game.Moves)
         {
-            board[move.Row, move.Column] = move.Player;
+            board[move.Row][move.Column] = move.Player;
         }
         return board;
     }

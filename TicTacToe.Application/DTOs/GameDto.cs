@@ -11,5 +11,5 @@ public class GameDto
     public ICollection<MoveDto> Moves { get; set; } = new List<MoveDto>();
     
     // представление доски для удобства фронтенда
-    public char?[,] Board { get; set; } = null!;
+    public char?[][] Board { get; set; } = null!;
 }
