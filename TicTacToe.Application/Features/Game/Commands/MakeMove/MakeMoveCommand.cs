@@ -13,4 +13,6 @@ public class MakeMoveCommand : IRequest<GameDto>
     public char Player { get; set; }
     public int Row { get; set; }
     public int Column { get; set; }
+    
+    public Guid ETag { get; set; } 
 }

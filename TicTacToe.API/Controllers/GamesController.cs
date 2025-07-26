@@ -1,9 +1,13 @@
+
 using Microsoft.AspNetCore.Mvc;
 using TicTacToe.Application.Features.Game.Commands;
 using TicTacToe.Application.Features.Game.Commands.MakeMove;
 using TicTacToe.Application.Features.Game.Queries;
 
 using MediatR;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
+using TicTacToe.Application.DTOs;
 
 namespace TicTacToe.Controllers;
 
@@ -40,6 +44,7 @@ public class GamesController : ControllerBase
     public async Task<IActionResult> GetGame(Guid id)
     {
         var gameDto = await _mediator.Send(new GetGameByIdQuery { Id = id });
+        Response.Headers.ETag = new StringValues($"\"{gameDto.Version}\"");
         return Ok(gameDto);
     }
 
@@ -50,12 +55,43 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> MakeMove(Guid id, [FromBody] MakeMoveCommand command)
+    public async Task<IActionResult> MakeMove(Guid id, [FromBody] MakeMoveRequestDto requestDto)
     {
-        // Присваиваем ID из URL'а команде перед отправкой
-        command.GameId = id;
+        
+        if (!Request.Headers.TryGetValue("If-Match", out var etagValues))
+        {
+            return BadRequest(new { message = "If-Match header is required for making a move." });
+        }
+        
+        // Убираем кавычки, которые добавили при отправке
+        var etagString = etagValues.ToString().Trim('"');
+        if (!Guid.TryParse(etagString, out var etag))
+        {
+            return BadRequest(new { message = "Invalid ETag format in If-Match header." });
+        }
+        var command = new MakeMoveCommand
+        {
+            GameId = id, // из URL
+            ETag = etag, // из заголовка
+            Player = requestDto.Player, // из тела запроса
+            Row = requestDto.Row,       // из тела запроса
+            Column = requestDto.Column  // из тела запроса
+        };
 
         var gameDto = await _mediator.Send(command);
+        Response.Headers.ETag = new StringValues($"\"{gameDto.Version}\"");
         return Ok(gameDto);
+    }
+
+    
+    /// <summary>
+    /// Проверить работоспособность
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("/health")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult GetHealth()
+    {
+        return Ok();
     }
 }

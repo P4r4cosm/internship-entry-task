@@ -9,6 +9,7 @@ public class GameDto
     public GameStatus Status { get; set; }
     public char CurrentTurn { get; set; }
     public ICollection<MoveDto> Moves { get; set; } = new List<MoveDto>();
+    public Guid Version {get; set;}
     
     // представление доски для удобства фронтенда
     public char?[][] Board { get; set; } = null!;

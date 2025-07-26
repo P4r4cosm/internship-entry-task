@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TicTacToe.Application.Common.Exceptions;
 using TicTacToe.Application.DTOs;
 using TicTacToe.Application.Interfaces;
@@ -32,6 +33,11 @@ public class MakeMoveCommandHandler : IRequestHandler<MakeMoveCommand, GameDto>
         // 2. Вызываем доменный метод, передавая ему настоящую реализацию генератора случайных чисел.
         //    Вся сложная логика проверки (чья очередь, занята ли клетка) инкапсулирована в домене.
         //    Если что-то пойдет не так, домен бросит исключение, которое мы можем перехватить.
+        if (game.Version != request.ETag)
+        {
+            // Это означает, что клиент пытается сделать ход на основе устаревшего состояния игры.
+            throw new ConflictException("The game state has changed. Please refresh and try again.");
+        }
         try
         {
             game.MakeMove(request.Player, request.Row, request.Column, maxValue => _random.Next(maxValue));
@@ -46,12 +52,19 @@ public class MakeMoveCommandHandler : IRequestHandler<MakeMoveCommand, GameDto>
             throw new BadRequestException(ex.Message);
         }
 
-        // 3. Сохраняем измененное состояние игры
-        //    Важно: GetByIdAsync и SaveChangesAsync должны работать в рамках одной транзакции,
-        //    что обычно обеспечивается временем жизни DbContext'а в ASP.NET Core (scoped).
-        await _gameRepository.SaveChangesAsync(cancellationToken);
+        try
+        {
+            // ===== ПРОВЕРКА НА ПАРАЛЛЕЛИЗМ (ШАГ 2) =====
+            await _gameRepository.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // Этот блок сработает, если два запроса прошли первую проверку ETag одновременно,
+            // но один успел сохраниться в базу на долю секунды раньше.
+            // Второй запрос получит эту ошибку от EF Core.
+            throw new ConflictException("The game state has changed. Please refresh and try again.");
+        }
         
-        // 4. Возвращаем новое состояние игры клиенту
         return _mapper.Map<GameDto>(game);
     }
 }

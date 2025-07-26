@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using TicTacToe.Domain.Common;
 using TicTacToe.Domain.Enums;
 
 
 namespace TicTacToe.Domain.Entities;
+
 public class Game
 {
     // Константы для правил игры, чтобы избежать "магических чисел"
@@ -11,6 +13,9 @@ public class Game
     private const int MaxPercentage = 100;
 
     public Guid Id { get; private set; }
+    
+    [ConcurrencyCheck]
+    public Guid Version { get; private set; }
     public int BoardSize { get; private set; }
     public int WinCondition { get; private set; }
     public GameStatus Status { get; private set; }
@@ -18,13 +23,15 @@ public class Game
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
-    
+
     private char?[,] _board;
     private readonly List<Move> _moves = new();
     public IReadOnlyCollection<Move> Moves => _moves.AsReadOnly();
 
     // Приватный конструктор для использования с фабричным методом и ORM
-    private Game() { }
+    private Game()
+    {
+    }
 
     /// <summary>
     /// Фабричный метод для создания новой игры.
@@ -98,6 +105,7 @@ public class Game
         }
 
         UpdatedAt = DateTime.UtcNow;
+        Version= Guid.NewGuid();
     }
 
     /// <summary>
@@ -176,7 +184,7 @@ public class Game
     {
         return row >= 0 && row < BoardSize && col >= 0 && col < BoardSize;
     }
-    
+
     /// <summary>
     /// Фабричный метод для восстановления существующей игры из истории (например, из базы данных).
     /// </summary>
