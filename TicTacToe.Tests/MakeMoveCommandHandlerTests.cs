@@ -92,8 +92,7 @@ public class MakeMoveCommandHandlerTests
 
         _mockGameRepository.Setup(r => r.GetByIdAsync(game.Id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(game);
-        _mockGameRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(1); // Имитируем успешное сохранение
+        _mockGameRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>())); // Имитируем успешное сохранение
 
         // Act
         await _handler.Handle(command, CancellationToken.None);

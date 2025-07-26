@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TicTacToe.Application.Common.Exceptions;
 using TicTacToe.Application.Interfaces;
 using TicTacToe.Domain.Entities;
 
@@ -37,8 +38,17 @@ public class GameRepository : IGameRepository
         await _context.Games.AddAsync(game, cancellationToken);
     }
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        // Ловим специфичное для EF Core исключение здесь, в Infrastructure
+        catch (DbUpdateConcurrencyException ex)
+        {
+            // И бросаем вместо него общее исключение, понятное Application слою
+            throw new ConflictException("The game state has changed. Please refresh and try again.");
+        }
     }
 }

@@ -1,6 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TicTacToe.Application.Common.Exceptions;
 using TicTacToe.Application.DTOs;
 using TicTacToe.Application.Interfaces;
@@ -65,16 +64,10 @@ public class MakeMoveCommandHandler : IRequestHandler<MakeMoveCommand, GameDto>
             throw new BadRequestException(ex.Message);
         }
 
-        try
-        {
-            await _gameRepository.SaveChangesAsync(cancellationToken);
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            throw new ConflictException("The game state has changed. Please refresh and try again.");
-        }
+
+        await _gameRepository.SaveChangesAsync(cancellationToken);
+
 
         return _mapper.Map<GameDto>(game);
     }
 }
-

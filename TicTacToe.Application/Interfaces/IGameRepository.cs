@@ -17,5 +17,5 @@ public interface IGameRepository
     /// <summary>
     /// Сохраняет все изменения, сделанные в контексте, в базу данных.
     /// </summary>
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

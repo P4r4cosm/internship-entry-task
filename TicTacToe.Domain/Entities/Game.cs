@@ -13,9 +13,8 @@ public class Game
     private const int MaxPercentage = 100;
 
     public Guid Id { get; private set; }
-    
-    [ConcurrencyCheck]
-    public Guid Version { get; private set; }
+
+    [ConcurrencyCheck] public Guid Version { get; private set; }
     public int BoardSize { get; private set; }
     public int WinCondition { get; private set; }
     public GameStatus Status { get; private set; }
@@ -105,7 +104,7 @@ public class Game
         }
 
         UpdatedAt = DateTime.UtcNow;
-        Version= Guid.NewGuid();
+        Version = Guid.NewGuid();
     }
 
     /// <summary>
@@ -223,6 +222,7 @@ public class Game
 
         return game;
     }
+
     /// <summary>
     /// Восстанавливает внутреннее состояние доски из коллекции ходов.
     /// Вызывается после загрузки сущности из базы данных.
