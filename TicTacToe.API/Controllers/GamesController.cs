@@ -71,11 +71,11 @@ public class GamesController : ControllerBase
         }
         var command = new MakeMoveCommand
         {
-            GameId = id, // из URL
-            ETag = etag, // из заголовка
-            Player = requestDto.Player, // из тела запроса
-            Row = requestDto.Row,       // из тела запроса
-            Column = requestDto.Column  // из тела запроса
+            GameId = id, 
+            ETag = etag, 
+            Player = requestDto.Player,
+            Row = requestDto.Row,       
+            Column = requestDto.Column  
         };
 
         var gameDto = await _mediator.Send(command);

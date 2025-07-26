@@ -223,4 +223,16 @@ public class Game
 
         return game;
     }
+    /// <summary>
+    /// Восстанавливает внутреннее состояние доски из коллекции ходов.
+    /// Вызывается после загрузки сущности из базы данных.
+    /// </summary>
+    public void HydrateBoard()
+    {
+        _board = new char?[BoardSize, BoardSize];
+        foreach (var move in Moves) // Moves уже будет загружен через .Include()
+        {
+            _board[move.Row, move.Column] = move.Player;
+        }
+    }
 }

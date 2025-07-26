@@ -15,29 +15,21 @@ public class GameRepository : IGameRepository
 
     public async Task<Game?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        // Загружаем "сырые" данные из БД, обязательно включая связанные ходы.
-        // AsNoTracking() полезен, т.к. мы создадим новый объект через фабрику,
-        // а не будем изменять тот, что отслеживает EF.
-        var gameData = await _context.Games
-            .AsNoTracking()
+        // Загружаем отслеживаемую EF Core сущность, включая связанные ходы.
+        var game = await _context.Games
             .Include(g => g.Moves)
             .FirstOrDefaultAsync(g => g.Id == id, cancellationToken);
 
-        if (gameData == null)
+        if (game == null)
         {
             return null;
         }
-        
-        return Game.LoadFromHistory(
-            gameData.Id,
-            gameData.BoardSize,
-            gameData.WinCondition,
-            gameData.Status,
-            gameData.CurrentTurn,
-            gameData.CreatedAt,
-            gameData.UpdatedAt,
-            gameData.Moves
-        );
+    
+        // "Гидрируем" приватное состояние доски.
+        game.HydrateBoard();
+
+        // Возвращаем отслеживаемую сущность.
+        return game;
     }
 
     public async Task AddAsync(Game game, CancellationToken cancellationToken = default)
