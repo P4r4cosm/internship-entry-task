@@ -52,10 +52,6 @@ public class ExceptionHandlingMiddleware
                 response = new { type = "https://tools.ietf.org/html/rfc7231#section-6.5.1", 
                     title = "Invalid request.", status = (int)statusCode, detail = exception.Message };
                 break;
-            default:
-                response = new { type = "https://tools.ietf.org/html/rfc7231#section-6.6.1", 
-                    title = "An internal server error has occurred.", status = (int)statusCode, detail = exception.Message };
-                break;
             case ConflictException conflictException:
                 statusCode = HttpStatusCode.Conflict; // <-- Статус 409
                 response = new { 
@@ -65,6 +61,11 @@ public class ExceptionHandlingMiddleware
                     detail = conflictException.Message 
                 };
                 break;
+            default:
+                response = new { type = "https://tools.ietf.org/html/rfc7231#section-6.6.1", 
+                    title = "An internal server error has occurred.", status = (int)statusCode, detail = exception.Message };
+                break;
+            
         }
 
         context.Response.ContentType = "application/json";
