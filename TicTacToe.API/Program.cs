@@ -16,12 +16,13 @@ public class Program
 
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
-
+        builder.Services.AddSingleton<GameConfiguration>();
+        
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddOptions<GameConfiguration>();
+        
         
         var app = builder.Build();
 

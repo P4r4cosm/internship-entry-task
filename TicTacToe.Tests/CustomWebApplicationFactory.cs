@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TicTacToe.Configurations;
 using TicTacToe.Infrastructure.Persistence;
 
 namespace TicTacToe.Tests.IntegrationTests;
@@ -17,6 +18,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
         {
             // ШАГ 1: Находим и удаляем дескриптор сервиса для DbContext.
             // Это самый надежный способ удалить все, что было зарегистрировано через AddDbContext.
+            services.AddOptions<GameConfiguration>();
             var dbContextDescriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
 
@@ -47,15 +49,6 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                 // Убеждаемся, что база данных (в памяти) создана.
                 db.Database.EnsureCreated();
                 
-                // Здесь можно добавить начальные данные для тестов (seeding), если нужно.
-                // try
-                // {
-                //     Utilities.InitializeDbForTests(db);
-                // }
-                // catch (Exception ex)
-                // {
-                //     logger.LogError(ex, "An error occurred seeding the database. Error: {Message}", ex.Message);
-                // }
             }
         });
     }
