@@ -1,4 +1,6 @@
-﻿services:
+﻿# docker-compose.yml
+
+services:
   tictactoe:
     image: tictactoe
     build:
@@ -14,8 +16,12 @@
       - DB_PORT=5432
       - BoardSize=${BoardSize}
       - WinCondition=${WinCondition}
+      - ASPNETCORE_URLS=http://+:8080
     depends_on:
       - postgres
+    networks:
+      - tictactoe-network
+  
   postgres:
     image: postgres:16-alpine
     restart: always
@@ -27,9 +33,26 @@
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - tictactoe-network
+
+  frontend:
+    container_name: tictactoe-frontend-ip
+    build:
+      context: ./tic-tac-toe-frontend
+      args:
+        REACT_APP_API_URL: http://localhost:8080/api
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - tictactoe
+    networks:
+      - tictactoe-network
 
 volumes:
   pgdata:
-        
-    
 
+networks:
+  tictactoe-network:
+    driver: bridge
