@@ -107,7 +107,7 @@ reportgenerator -reports:coverage.cobertura.xml -targetdir:coveragereport -repor
 <img width="1895" height="1600" alt="image" src="https://github.com/user-attachments/assets/3162c329-7757-44ed-8b5a-c2a372ac8011" />
 
 Результаты тестов можно посмотреть здесь:
-https://p4r4cosm.github.io/internship-entry-task/
+![Тесты](https://p4r4cosm.github.io/internship-entry-task/)
 ## 🔌 Документация API
 
 Все эндпоинты принимают и возвращают `application/json`.
