@@ -1,0 +1,12 @@
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/bin/Debug/net9.0/TicTacToe.Domain.deps.json
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/bin/Debug/net9.0/TicTacToe.Domain.dll
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/bin/Debug/net9.0/TicTacToe.Domain.pdb
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.AssemblyInfoInputs.cache
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.AssemblyInfo.cs
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.csproj.CoreCompileInputs.cache
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.sourcelink.json
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.dll
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/refint/TicTacToe.Domain.dll
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/TicTacToe.Domain.pdb
+/home/paracosm/RiderProjects/TicTacToe/TicTacToe.Domain/obj/Debug/net9.0/ref/TicTacToe.Domain.dll
