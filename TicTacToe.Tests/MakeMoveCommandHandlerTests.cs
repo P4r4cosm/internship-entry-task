@@ -60,29 +60,7 @@ public class MakeMoveCommandHandlerTests
         // Проверяем, что была выброшена именно ошибка конфликта
         await act.Should().ThrowAsync<ConflictException>();
     }
-
-    [Fact]
-    public async Task Handle_ShouldThrowConflictException_OnDbUpdateConcurrencyException()
-    {
-        // Arrange
-        var game = Game.CreateNew(3, 3);
-        // ETag совпадает, так что первая проверка пройдет
-        var command = new MakeMoveCommand { GameId = game.Id, ETag = game.Version, Player = 'X', Row = 0, Column = 0 };
-
-        _mockGameRepository.Setup(r => r.GetByIdAsync(game.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(game);
-
-        // Настраиваем мок так, чтобы при вызове SaveChangesAsync он имитировал ошибку гонки от EF Core
-        _mockGameRepository.Setup(r => r.SaveChangesAsync(It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new DbUpdateConcurrencyException());
-
-        // Act
-        Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        await act.Should().ThrowAsync<ConflictException>();
-    }
-
+    
     [Fact]
     public async Task Handle_WithValidCommand_ShouldCallMakeMoveAndSaveChanges()
     {

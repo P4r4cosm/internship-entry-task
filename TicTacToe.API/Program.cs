@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using TicTacToe.Application;
+using TicTacToe.Configurations;
 using TicTacToe.Infrastructure;
 using TicTacToe.Infrastructure.Persistence;
 using TicTacToe.Middleware;
@@ -20,7 +21,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-
+        builder.Services.AddOptions<GameConfiguration>();
+        
         var app = builder.Build();
 
         if (!app.Environment.IsEnvironment("Test"))

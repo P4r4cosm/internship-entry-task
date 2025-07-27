@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TicTacToe.Application.Features.Game.Commands;
 using TicTacToe.Application.Features.Game.Commands.MakeMove;
@@ -6,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using TicTacToe.Application.DTOs;
+using TicTacToe.Configurations;
 
 namespace TicTacToe.Controllers;
 
@@ -14,12 +16,12 @@ namespace TicTacToe.Controllers;
 public class GamesController : ControllerBase
 {
     private readonly ISender _mediator;
-    private readonly IConfiguration _configuration;
+    private readonly GameConfiguration _gameConfiguration;
 
-    public GamesController(ISender mediator, IConfiguration configuration)
+    public GamesController(ISender mediator, GameConfiguration gameConfiguration)
     {
         _mediator = mediator;
-        _configuration = configuration;
+        _gameConfiguration = gameConfiguration;
     }
 
     /// <summary>
@@ -30,12 +32,8 @@ public class GamesController : ControllerBase
     public async Task<IActionResult> CreateGame()
     {
         // 1. Читаем правила игры из конфигурации
-        var boardSizeSection = _configuration.GetSection("BoardSize");
-        var winConditionSection = _configuration.GetSection("WinCondition");
-
-        var boardSize = int.Parse(boardSizeSection.Value);
-        var winCondition = int.Parse(winConditionSection.Value);
-
+        var boardSize = _gameConfiguration.BoardSize;
+        var winCondition = _gameConfiguration.WinCondition;
         var gameId = await _mediator.Send(
             new CreateGameCommand { BoardSize = boardSize, WinCondition = winCondition });
 
@@ -63,13 +61,14 @@ public class GamesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> MakeMove(Guid id, [FromBody] MakeMoveRequestDto requestDto, [FromHeader(Name = "If-Match")] string etag)
+    public async Task<IActionResult> MakeMove(Guid id, [FromBody] MakeMoveRequestDto requestDto,
+        [FromHeader(Name = "If-Match")] string etag)
     {
         var etagString = etag.Trim('"');
         if (!Guid.TryParse(etagString, out var etagGuid))
         {
-            // Статус 412 Precondition Failed более корректен для неверного ETag
-            return StatusCode(StatusCodes.Status412PreconditionFailed, new { message = "Invalid ETag format in If-Match header." });
+            return StatusCode(StatusCodes.Status412PreconditionFailed,
+                new { message = "Invalid ETag format in If-Match header." });
         }
 
         var command = new MakeMoveCommand
