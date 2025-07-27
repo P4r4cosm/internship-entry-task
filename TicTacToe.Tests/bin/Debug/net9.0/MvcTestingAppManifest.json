@@ -1,0 +1,6 @@
+{
+  "TicTacToe.API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/paracosm\/RiderProjects\/TicTacToe\/TicTacToe.API",
+  "TicTacToe.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/paracosm\/RiderProjects\/TicTacToe\/TicTacToe.Application",
+  "TicTacToe.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/paracosm\/RiderProjects\/TicTacToe\/TicTacToe.Domain",
+  "TicTacToe.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/paracosm\/RiderProjects\/TicTacToe\/TicTacToe.Infrastructure"
+}
